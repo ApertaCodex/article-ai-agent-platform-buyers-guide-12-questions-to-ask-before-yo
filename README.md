@@ -16,13 +16,13 @@ You should be able to run something like this against the platform's tracing API
 
 ```python
 traces = client.query_traces(
-    workspace="billing-team",
-    metric="tool_call_success_rate",
-    filter={"tool_name": "refund_handler", "window": "7d"}
+ workspace="billing-team",
+ metric="tool_call_success_rate",
+ filter={"tool_name": "refund_handler", "window": "7d"}
 )
 ```
 
-A platform that only surfaces model-level latency won't catch a vector search plugin that's silently returning empty results because an index drifted. That's the kind of failure that erodes trust slowly, then suddenly. We wrote a deeper breakdown of [the metrics that actually matter for agent observability](/blog/agent-observability-beyond-uptime), including behavioral drift detection and quality scoring that goes beyond binary pass/fail.
+A platform that only surfaces model-level latency won't catch a vector search plugin that's silently returning empty results because an index drifted. That's the kind of failure that erodes trust slowly, then suddenly. We wrote a deeper breakdown of [the metrics that actually matter for agent observability](https://omnithium.ai/blog/agent-observability-beyond-uptime.html), including behavioral drift detection and quality scoring that goes beyond binary pass/fail.
 
 If the vendor can't show you a trace map of a multi-agent workflow with latency waterfall, tool call attribution, and cost per node, treat that as a red flag.
 
@@ -34,17 +34,17 @@ A production-grade routing layer needs to do more than switch from GPT-4 to Clau
 
 You can test this during evaluation by forcing a model endpoint to fail and watching how the platform recovers. If recovery means the agent throws an unhandled exception and the user sees a spinner, you've found a gap. We've seen teams burned by platforms that handle model errors gracefully in demos but fall apart when the fallback chain itself introduces a subtle prompt mismatch because the second model expects a different output schema.
 
-Also ask about the routing and cost implications: will the platform let you attribute the extra spend of a fallback call to the right cost center without manual tagging? That loops back into [cost attribution maturity](/blog/ai-agent-cost-attribution), which most platforms treat as an afterthought.
+Also ask about the routing and cost implications: will the platform let you attribute the extra spend of a fallback call to the right cost center without manual tagging? That loops back into [cost attribution maturity](https://omnithium.ai/blog/ai-agent-cost-attribution.html), which most platforms treat as an afterthought.
 
 ## 3. What governance controls ship out of the box?
 
-Governance isn't something you can bolt onto an agent platform later. We've written about [the four pillars of enterprise agent governance](/blog/ai-agent-governance-enterprise-guide): policy management, human-in-the-loop controls, audit trails, and real-time monitoring. But during vendor evaluation, you need to ask for demonstrations, not slide decks.
+Governance isn't something you can bolt onto an agent platform later. We've written about [the four pillars of enterprise agent governance](https://omnithium.ai/blog/ai-agent-governance-enterprise-guide.html): policy management, human-in-the-loop controls, audit trails, and real-time monitoring. But during vendor evaluation, you need to ask for demonstrations, not slide decks.
 
 Ask to see the policy-as-code interface. Can you express rules like "No agent in the finance workspace may execute a tool that writes to a production database without explicit human approval"? Can you enforce that policy at the platform level, or do you have to wrap every tool call in custom middleware? A strong platform will let you define policies in a declarative format, version them alongside your agent definitions, and enforce them during execution, not as a post-hoc check.
 
 Ask to export audit logs. The logs should capture the full chain of agent decisions, tool calls, model invocations, and human approvals, including the prompt context at each step. If the log format is proprietary and can't be exported to your SIEM without a custom connector, you're building technical debt into your compliance posture.
 
-For multi-agent systems, the governance picture gets more complicated. When a coordinator agent delegates to a sub-agent, who is accountable for the outcome? The platform's governance model should preserve that chain of attribution. We explored the unique challenges in [why multi-agent systems need governance](/blog/why-multi-agent-systems-need-governance). If the vendor can't walk you through an example where two agents interact and you can still trace responsibility back to the originating workspace and user, their governance model has a hole.
+For multi-agent systems, the governance picture gets more complicated. When a coordinator agent delegates to a sub-agent, who is accountable for the outcome? The platform's governance model should preserve that chain of attribution. We explored the unique challenges in [why multi-agent systems need governance](https://omnithium.ai/blog/why-multi-agent-systems-need-governance.html). If the vendor can't walk you through an example where two agents interact and you can still trace responsibility back to the originating workspace and user, their governance model has a hole.
 
 ## 4. Can we run the platform entirely on-premises?
 
@@ -60,7 +60,7 @@ If your organization has multiple business units or tenants sharing the same age
 
 Hard isolation adds operational overhead but gives you blast radius protection: if one tenant's agent hits a bug that spikes LLM usage, it doesn't impact other tenants. Soft isolation is operationally simpler but you need to trust the platform's resource limits and quotas.
 
-The trickier question is about data contamination between tenants within the same LLM call. If the platform uses a shared vector database for retrieval-augmented generation, how does it ensure that Agent A from Tenant X doesn't retrieve documents from Tenant Y? Ask to see the scoping mechanism. It should enforce tenant boundaries at the query level, not just the application layer. We've covered [multi-tenant AI agent architectures](/blog/multi-tenant-agent-architecture) in depth, including credential scoping and prompt contamination prevention. The short version: if the platform can't show you a demo where two tenants' agents run side by side with completely isolated tool access and memory stores, it's not ready for true multi-tenancy.
+The trickier question is about data contamination between tenants within the same LLM call. If the platform uses a shared vector database for retrieval-augmented generation, how does it ensure that Agent A from Tenant X doesn't retrieve documents from Tenant Y? Ask to see the scoping mechanism. It should enforce tenant boundaries at the query level, not just the application layer. We've covered [multi-tenant AI agent architectures](https://omnithium.ai/blog/multi-tenant-agent-architecture.html) in depth, including credential scoping and prompt contamination prevention. The short version: if the platform can't show you a demo where two tenants' agents run side by side with completely isolated tool access and memory stores, it's not ready for true multi-tenancy.
 
 ## 6. What does your SLA cover, and what are the incident response times?
 
@@ -74,7 +74,7 @@ Finally, ask for historical incident reports. A vendor that won't share post-mor
 
 Prompts are the new config files. They drift. They break. A tiny change in wording can shift an agent's output quality by 15 percentage points on a golden test set. Your platform needs to treat prompts like code: versioned, testable, and deployable with a rollback path that takes effect in seconds, not days.
 
-Ask to see the prompt versioning UI or API. Can you diff two prompt versions semantically, not just with a text comparison? Can you run regression tests across a set of historical conversations to see if the new prompt performs better or worse on specific scenarios? This is the core of [production-grade prompt versioning and regression testing](/blog/prompt-versioning-regression-testing).
+Ask to see the prompt versioning UI or API. Can you diff two prompt versions semantically, not just with a text comparison? Can you run regression tests across a set of historical conversations to see if the new prompt performs better or worse on specific scenarios? This is the core of [production-grade prompt versioning and regression testing](https://omnithium.ai/blog/prompt-versioning-regression-testing.html).
 
 A practical test: ask the vendor to show you a prompt rollback during a live demo. If they can't switch from version 4 to version 3 of a prompt without redeploying the entire agent or restarting a workflow, their versioning story is weak. You don't want to be debugging a prompt regression at 11 PM and realize the rollback requires a CI pipeline run that takes 20 minutes.
 
@@ -84,7 +84,7 @@ Almost every platform supports some form of human approval. The question is how 
 
 The platform should let you define human-in-the-loop patterns declaratively. For example, you might configure: "If the agent's confidence in a refund decision is below 0.85, pause and request approval. If the amount is over $1,000, require approval regardless of confidence." The system should then inject the approval context into the agent's memory so it can resume cleanly.
 
-We've written extensively about [human-in-the-loop patterns for high-stakes decisions](/blog/human-in-the-loop-patterns) and about [why human approval is the last reversible moment](/blog/human-approval-last-reversible-moment-ai-agents). The common failure mode is systems that treat human approval as a blocking API call rather than a workflow state that can survive restarts, timeouts, and shifts. Ask how the platform handles an approval that's been pending for 24 hours. Does the agent time out and retry? Does it escalate? Does the audit trail show the full lifecycle? If the answer is "the human clicks approve and the agent continues," that's not enough.
+We've written extensively about [human-in-the-loop patterns for high-stakes decisions](https://omnithium.ai/blog/human-in-the-loop-patterns.html) and about [why human approval is the last reversible moment](https://omnithium.ai/blog/human-approval-last-reversible-moment-ai-agents.html). The common failure mode is systems that treat human approval as a blocking API call rather than a workflow state that can survive restarts, timeouts, and shifts. Ask how the platform handles an approval that's been pending for 24 hours. Does the agent time out and retry? Does it escalate? Does the audit trail show the full lifecycle? If the answer is "the human clicks approve and the agent continues," that's not enough.
 
 ## 9. How do you measure and attribute costs per workspace?
 
@@ -94,15 +94,15 @@ A strong platform will give you a dashboard and an API that surfaces cost data d
 
 ```python
 costs = client.get_cost_report(
-    workspace="customer-support",
-    granularity="daily",
-    start="2026-05-01", end="2026-05-14"
+ workspace="customer-support",
+ granularity="daily",
+ start="2026-05-01", end="2026-05-14"
 )
 ```
 
 And see exactly how much the new summarization agent added to the bill versus the triage agent.
 
-We covered [LLM cost optimization strategies](/blog/llm-cost-optimization-agents) and the [per-workspace cost attribution](/blog/ai-agent-cost-attribution) that finance teams need for showback or chargeback models. If the platform can't do per-workspace attribution without your team building and maintaining custom tags, you're signing up for a spreadsheet nightmare. At [Omnithium](https://omnithium.ai/pricing), we've built per-workspace billing into the platform so cost attribution isn't a side project. That transparency should be standard.
+We covered [LLM cost optimization strategies](https://omnithium.ai/blog/llm-cost-optimization-agents.html) and the [per-workspace cost attribution](https://omnithium.ai/blog/ai-agent-cost-attribution.html) that finance teams need for showback or chargeback models. If the platform can't do per-workspace attribution without your team building and maintaining custom tags, you're signing up for a spreadsheet nightmare. At [Omnithium](https://omnithium.ai/pricing), we've built per-workspace billing into the platform so cost attribution isn't a side project. That transparency should be standard.
 
 ## 10. How do you prevent prompt injection and model theft?
 
@@ -110,7 +110,7 @@ Security questions tend to get vague answers from vendors. Push for specifics. A
 
 Prompt injection is a vector that changes with every new agent you build. A generic LLM firewall won't catch application-specific attacks. The platform should let you define rules like: "Agents in the 'public-facing' group may never execute tools tagged 'destructive' regardless of what the LLM output says." That enforcement should happen at the platform level, not in your prompt.
 
-We wrote a detailed guide on [defending against prompt injection in production](/blog/ai-agent-security-prompt-injection-defense). The architecture that works involves sandboxed tool execution, audit logging every attempted tool call even if it's blocked, and a separation between the agent's reasoning loop and the execution environment. Ask the vendor to show you a real-time injection attempt being caught and logged, with the full context available for your security team's review. If they can't, assume you'll need to build that layer yourself. At [Omnithium](https://omnithium.ai/security), we've made agent-level security controls a core part of the platform, not an add-on module.
+We wrote a detailed guide on [defending against prompt injection in production](https://omnithium.ai/blog/ai-agent-security-prompt-injection-defense.html). The architecture that works involves sandboxed tool execution, audit logging every attempted tool call even if it's blocked, and a separation between the agent's reasoning loop and the execution environment. Ask the vendor to show you a real-time injection attempt being caught and logged, with the full context available for your security team's review. If they can't, assume you'll need to build that layer yourself. At [Omnithium](https://omnithium.ai/security), we've made agent-level security controls a core part of the platform, not an add-on module.
 
 ## 11. What does a migration from LangChain or CrewAI look like, and how do we avoid lock-in?
 
@@ -118,7 +118,7 @@ Many teams started with frameworks like LangChain or CrewAI for prototyping and 
 
 Some platforms offer importers that convert LangChain chains into their graph representation, but the mapping is rarely lossless. You'll likely need to refactor parts of your workflow anyway because a platform that enforces governance boundaries won't let you pass raw API keys around like a framework does. That's a feature, not a bug, but you need to plan for the effort.
 
-The bigger concern is lock-in. If you build a complex multi-agent workflow on this platform, what does it cost to leave? Ask about export formats: can you dump all agent definitions, prompts, policies, and tool configurations in a format you can version and port? If the only export is a CSV of logs, you're locked in by the weight of your own operational investment. We've compared [migrating from LangChain to a production platform](/blog/migrating-from-langchain) in detail. If you're evaluating platforms that wrap LangChain under the hood, understand that you might be swapping one kind of lock-in for another. Compare the [Omnithium approach vs LangChain/LangGraph](https://omnithium.ai/compare/omnithium-vs-langchain-langgraph) and other frameworks like [CrewAI](https://omnithium.ai/compare/omnithium-vs-crewai) to see how much of your stack you're really owning.
+The bigger concern is lock-in. If you build a complex multi-agent workflow on this platform, what does it cost to leave? Ask about export formats: can you dump all agent definitions, prompts, policies, and tool configurations in a format you can version and port? If the only export is a CSV of logs, you're locked in by the weight of your own operational investment. We've compared [migrating from LangChain to a production platform](https://omnithium.ai/blog/migrating-from-langchain.html) in detail. If you're evaluating platforms that wrap LangChain under the hood, understand that you might be swapping one kind of lock-in for another. Compare the [Omnithium approach vs LangChain/LangGraph](https://omnithium.ai/compare/omnithium-vs-langchain-langgraph) and other frameworks like [CrewAI](https://omnithium.ai/compare/omnithium-vs-crewai) to see how much of your stack you're really owning.
 
 ## 12. What happens when you miss an SLA or go out of business?
 
@@ -130,7 +130,7 @@ Also ask about business continuity: is the code escrowed? Do you have the right 
 
 ---
 
-Evaluating AI agent platforms is a high-stakes decision. The right platform gives your engineering teams superpowers. The wrong one becomes the bottleneck that keeps you from ever moving past level 2 in your [agent maturity model](/blog/ai-agent-maturity-model).
+Evaluating AI agent platforms is a high-stakes decision. The right platform gives your engineering teams superpowers. The wrong one becomes the bottleneck that keeps you from ever moving past level 2 in your [agent maturity model](https://omnithium.ai/blog/ai-agent-maturity-model.html).
 
 [Omnithium](https://omnithium.ai) was built to answer these questions transparently. Our observability captures every tool call, model invocation, and approval gate. Our governance model enforces policies at the platform layer, not in prompts. We deploy on-prem, in cloud VPCs, or as SaaS. And we version everything: prompts, policies, agent graphs, cost data. If you're in the middle of evaluating platforms, the [pricing page](https://omnithium.ai/pricing) and our [resource library](https://omnithium.ai/resources) give you a concrete look at how we handle the details that matter.
 
