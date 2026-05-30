@@ -133,19 +133,3 @@ Also ask about business continuity: is the code escrowed? Do you have the right 
 Evaluating AI agent platforms is a high-stakes decision. The right platform gives your engineering teams superpowers. The wrong one becomes the bottleneck that keeps you from ever moving past level 2 in your [agent maturity model](https://omnithium.ai/blog/ai-agent-maturity-model.html).
 
 [Omnithium](https://omnithium.ai) was built to answer these questions transparently. Our observability captures every tool call, model invocation, and approval gate. Our governance model enforces policies at the platform layer, not in prompts. We deploy on-prem, in cloud VPCs, or as SaaS. And we version everything: prompts, policies, agent graphs, cost data. If you're in the middle of evaluating platforms, the [pricing page](https://omnithium.ai/pricing) and our [resource library](https://omnithium.ai/resources) give you a concrete look at how we handle the details that matter.
-
----
-
-*Originally published on the [Omnithium Blog](https://omnithium.ai/blog/ai-agent-platform-buyers-guide).*
-
-📚 Explore more articles on the [Omnithium Blog](https://omnithium.ai/blog)
-
-🚀 [Get started with Omnithium](https://omnithium.ai/signup) | [Explore the platform](https://omnithium.ai/platform/) | [Book a demo](https://omnithium.ai/demo/) | [Resources](https://omnithium.ai/resources)
-
----
-
-**[Omnithium](https://omnithium.ai)** -- the AI agent platform for enterprises.
-
-📚 [Explore the Omnithium Blog](https://omnithium.ai/blog) for more insights.
-
-🚀 [Get started](https://omnithium.ai/signup) | [Explore the platform](https://omnithium.ai/platform/) | [Book a demo](https://omnithium.ai/demo/) | [Resources](https://omnithium.ai/resources)
